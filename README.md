@@ -4,162 +4,277 @@ Go là ngôn ngữ static type. Nghĩa là khi biên dịch thì Go cần biết
 
 -> Nếu dùng generics sẽ phá vỡ nguyên tắc này. Nghĩa là khi tới runtime thì mới check được
 
-## Resources
+## Tài liệu tham khảo
 
-- GoByExample: https://gobyexample.com/
-  https://200lab.io/blog/tag/golang/
-- sách Learning Go
+- **Sách**: _Learning Go_
+- [Go By Example](https://gobyexample.com/)
+- [200Lab Blog: Golang](https://200lab.io/blog/tag/golang/)
 
-## Useful Tools
+---
+
+## Công cụ hữu ích
 
 ### Lint
 
-Dùng lint:
-go lint -
-Cài đặt “go install golang.org/x/lint/golint@latest”
+- Dùng để kiểm tra chất lượng mã nguồn, phát hiện các lỗi code style hoặc tiềm ẩn.
 
-Chạy với lệnh
+- Cài đặt
 
-golint ./...
+  ```bash
+  go install golang.org/x/lint/golint@latest
+  ```
+
+- Sử dụng
+
+  ```bash
+  golint ./...
+  ```
+
+---
 
 ### Kiểm tra lỗi
 
-chạy lệnh
+- Kiểm tra lỗi cơ bản:
 
-go vet ./...
+  - Sử dụng lệnh go vet để phát hiện các vấn đề tiềm ẩn trong mã nguồn:
 
-hoặc dùng tool golangci-lint sẽ chạy đồng thời golint, go vet: https://golangci-lint.run/usage/configuration/
+  ```bash
+  go vet ./...
+  ```
 
--> Nên dùng golint và go vet. Chỉ dùng golangci-lint khi team đồng ý
+- Sử dụng golangci-lint:
+  - Công cụ này kết hợp nhiều linter, bao gồm cả golint và go vet.
+  - Cấu hình và hướng dẫn sử dụng: [golangci-lint](https://golangci-lint.run/usage/configuration)
+
+👉 Khuyến nghị:
+
+- Sử dụng golint và go vet cho các kiểm tra thông thường.
+- Chỉ dùng golangci-lint nếu cả team đồng ý để đảm bảo tính thống nhất.
+
+---
 
 ### Makefile
 
-Sử dụng Makefile để tự động các lệnh chạỵ, tránh việc lệnh này chạy ở máy của mình mà không chạy được ở máy người khác
-Mỗi 1 lệnh gọi là target
-.DEFAULT_GOAL là target sẽ chạy không không chỉ định target nào
+#### Thành phần
 
-Từ trước dấu hai chấm (:) là tên của target. Bất kỳ từ nào phía sau đều là các target cần phải chạy trước khi chạy target này
-Lệnh `.PHONY` giúp `make` không nhầm lẫn khi tạo 1 thư mục trong project mà có trùng tên với target
+1. **Target:**
 
-## Kiểu dữ liệu nguyên thuỷ và Khai báo
+   - Mỗi lệnh trong Makefile được gọi là một **target**.
+   - Target nằm ở trước dấu hai chấm `:`.
+   - Các thành phần sau dấu `:` là các target phụ (dependencies) cần được thực thi trước target chính.
 
-### Kiểu Built-in
+   Ví dụ:
 
-- boolean, integer, float, stringÏ
+   ```make
+   build: clean
+       go build .
+   ```
 
-#### The Zero Value
+   - Trong ví dụ trên, target `build` phụ thuộc vào target `clean`. Trước khi `build` chạy, target `clean` sẽ được thực thi.
 
-- Mặc định gán zero value cho biến mà được khai báo nhưng không gán giá trị
-- Với kiểu integer, float là 0
+2. **DEFAULT_GOAL:**
 
-#### Literals
+   - `DEFAULT_GOAL` là target mặc định sẽ chạy nếu bạn không chỉ định target cụ thể.
+   - Ví dụ:
 
-- Một `literal` có thể là 1 số, ký tự hoặc string
-- Integer:
-  - có thể khai báo như sau:
-  - 1, 1_234 (1234)
-  - 0b cho số nhị phân, 0o cho số octal, 0x cho hexadecimal - tuy nhiên khai báo như này rất gây nhầm lẫn
-- Float:
-  - Dùng dấu (.) để khai báo giá trị. Ví dụ: 6.03e23 -> 6.023^23
-  - Có float32 và float64
-- Rune literal:
-  - biểu diễn ký tự và bao quanh bởi dấu ngoặc đơn ('')
-  - Ví dụ: 'a', các số octal, 8/16-bit hexadecimal, các ký tự như '\n',...
+     ```make
+     .DEFAULT_GOAL := build
+     ```
 
--> Tóm lại thì:
+3. **`.PHONY`:**
 
-- Dùng hệ cơ số 10 để biểu diễn số và hạn chế việc dùng hexadecimal với rune literal
-- Nên dùng dấu ngoặc kép ("") để tạo 1 interpreted string literal (ví dụ "Hello World")
-- Nếu cần dùng backslash, dấu ngoặc kép, hoặc xuống dòng trong string, thì sử dụng raw string literal. Được bao quanh bởi dấu (``)
+   - Dùng để khai báo các target không tương ứng với tệp tin hoặc thư mục thực tế.
+   - Điều này giúp Makefile tránh nhầm lẫn nếu trong dự án có thư mục hoặc tệp có tên trùng với target.
 
-- Boolean:
+   Ví dụ:
 
-  - Có 2 giá trị true hoặc false
+   ```make
+   .PHONY: clean
+   clean:
+       rm -rf build/
+   ```
 
-- Kiểu số học (numeric types)
-  - 1 `byte` tương đương với `uint8`
-  - Còn có `rune` và `uintptr`
+#### Lợi ích của Makefile
 
--> Tóm lại thì:
+- Tự động hóa các lệnh phức tạp.
+- Đảm bảo tính nhất quán khi chạy lệnh trên các máy khác nhau.
+- Giúp quản lý quy trình build và kiểm tra mã nguồn dễ dàng hơn.
 
--
+---
 
-#### Khai báo
+## Kiểu dữ liệu và Khai báo trong Golang
 
-- Không nên khai báo kiểu := khi
+### Kiểu dữ liệu Built-in
 
-  - khởi tạo 1 biến với zero value, thay vào đó, sử dụng var x int
-  - khi gán 1 constant chưa có kiểu dữ liệu hoặc 1 literal cho 1 biến và kiểu dữ liệu mặc định của nó không phải kiểu bạn muốn cho biến, khai báo như sau: varr x byte = 20
-  - Bởi vì := cho phép gán cả biến mới và cũ, đôi khi nó tạo 1 biến mới trong khi bạn nghĩ đang dùng biến cũ. Trong tình huống này, khai báo rõ ràng các biến mới với `var` sẽ hợp lý hơn
+Go cung cấp một số kiểu dữ liệu cơ bản (built-in types) mà bạn có thể sử dụng trong mọi chương trình. Các kiểu dữ liệu này bao gồm:
 
-- Hạn chế khai báo biến bên ngoài function vì chúng làm phức tạp luồng phân tích dữ liệu
+- **Boolean**: Kiểu dữ liệu này chỉ có hai giá trị là `true` hoặc `false`.
+- **Integer**: Dùng để biểu diễn các số nguyên. Ví dụ: `int`, `int32`, `int64`.
+- **Float**: Dùng để biểu diễn các số thập phân. Ví dụ: `float32`, `float64`.
+- **String**: Dùng để biểu diễn chuỗi văn bản.
 
-- Tất cả các biến local cần được read -> hạn chế khai báo biến thừa
-- Các biến const có thể được khai báo mà không cần read bởi vì nó được tính toán ở compile time và không gây ảnh hưởng. Nghĩa là nếu nó không được sử dụng, thì sẽ được bao gồm trong binary được compile
+#### The Zero Value (Giá trị mặc định)
 
-## Array - Mảng
+Khi bạn khai báo một biến mà không gán giá trị, Go sẽ tự động gán cho biến đó một giá trị mặc định (zero value). Ví dụ:
 
-- Mảng ít khi được sử dụng trực tiếp trong Go bởi vì:
-  - Go sẽ lấy cả `size` của mảng thành 1 phần trong `type` của mảng. Ví dụ [3]int sẽ khác kiểu so với [4]int.
-  - Không thể dùng 1 biến dùng làm size của mảng, vì `type` cần được xử lý ở compile time, chứ không phải runtime
-  - Không thể ép kiểu 1 mảng thành mảng có kiểu khác. Không thể viết 1 function mà hoạt động với mảng có size bất kỳ cũng như không thể gán 1 mảng có size khác nhau với mảng khác
-- Go chỉ có mảng 1 chiều, tuy nhiên có thể tạo mảng nhiều chiều như sau: var x [2][3]int
+- Các kiểu số (integer, float) sẽ được gán giá trị `0`.
+- Các kiểu Boolean sẽ được gán giá trị `false`.
+- Các kiểu chuỗi (`string`) sẽ được gán giá trị chuỗi rỗng `""`.
 
--> Tóm lại thì:
+#### Literals (Chữ số nguyên thủy)
 
-- Dùng mảng khi biết chính xác length
-- Mảng tồn tại vì nó 1 chỗ lưu trữ cho `slice`
+`Literal` là các giá trị được viết trực tiếp trong mã nguồn. Có thể là số, ký tự hoặc chuỗi.
 
-### Slices
+- **Số nguyên**:
 
-- Khai báo:
-  - slice literal
-  - nil zero value
-  - make
-- Khi bạn cần 1 số giá trị tuần tự, sử dụng slice
-- Slice hữu dụng bởi vì length không phải 1 phần của `type` của slice
-- Sự khác biệt với mảng là khi khai báo slice sẽ không chỉ định size của nó. Ví dụ: var x = []int{10, 20, 30}
-- Không nên tạo 1 slice có capacity nhỏ hơn length vì nó sẽ panic tại runtime
+  - Bạn có thể khai báo như sau:
 
-* Tips: Sử dụng [...] tạo mảng, [] tạo slice
+    ```go
+    1, 1_234, 0b1010, 0o12, 0xF
+    ```
 
-- Không thể so sánh slice với nhau, chỉ so sánh slice được với nil
+  - `0b` biểu thị số nhị phân, `0o` biểu thị số hệ bát phân (octal), `0x` biểu thị số hệ thập lục phân (hexadecimal). Tuy nhiên, hãy tránh sử dụng chúng vì chúng có thể gây nhầm lẫn.
 
-- nil là identifier biểu diễn cho việc thiếu sót của giá trị với 1 số kiểu dữ liệu
+- **Số thập phân (Float)**:
 
-- package reflect có hàm DeepEqual có thể so sánh slice
+  - Dùng dấu chấm (.) để biểu thị giá trị số thập phân.
 
-- Mỗi khi truyền 1 tham số vào 1 function, Go tạo 1 copy của giá trị được truyền vào
+    ```go
+    6.03e23  // 6.023^23
+    ```
 
-* Capacity
+  - Go có hai kiểu `float32` và `float64` cho phép bạn chọn độ chính xác.
 
-- Mỗi slice có 1 capacity, là số lượng vùng nhớ liên tục dự trữ. Nó có thể lớn hơn length. Khi length tới ngưỡng capacity thì không thể append thêm vào slice đó nữa. Khi đó Go runtime sẽ cấp phát 1 slice với capacity lớn hơn và trả về slice mới này -> tốn thời gian do quá trình tạo mới, sao chép từ slice cũ sang slice mới
+- **Rune literal**:
 
-- Từ Go1.14 là sẽ gấp đôi size của slice nếu capacity nhỏ hơn 1024 và tăng dần 25% sau đó
+  - Rune là một kiểu dữ liệu đặc biệt để biểu thị một ký tự. Rune được bao quanh bởi dấu nháy đơn (`'`), ví dụ:
 
-- Mục tiêu của việc khai báo slice là giảm thiểu số lần slice cần tăng size
+    ```go
+    'a', '1', '', ' '
+    ```
 
-- Tạo slice bằng 1 slice rỗng: var x = []int{}
+**Tóm lại**:
 
--> Tóm lại thì:
+- Sử dụng hệ cơ số 10 để biểu diễn số để tránh nhầm lẫn, đặc biệt là khi sử dụng số thập lục phân (hexadecimal) trong biểu thức ký tự (rune literal).
+- Sử dụng dấu ngoặc kép (`""`) để tạo chuỗi (string).
+- Nếu bạn cần sử dụng dấu backslash (`\`), dấu nháy kép (`"`) hoặc xuống dòng trong chuỗi, hãy sử dụng raw string literal (bao quanh bởi dấu backtick ``).
 
-- Nếu sử dụng slice như 1 buffer thì sử dụng nonzero length
-- Nếu biết chính xác size bạn muốn, có thể chỉ định length và index vào slice
-- Trong các trường hợp khác, sử dụng make với zero length và chỉ định capacity -> Nên dùng cách này do hạn chế việc bị panic
+#### Các kiểu số học (Numeric Types)
 
-- Nếu tạo 1 slice từ 1 slice khác, 2 slice này sẽ chia sẻ cùng 1 vùng nhớ. Nghĩa là nếu thay đổi 1 slice thì sẽ có tác động tới các slice có chung thành phần thay đổi đó
+- **Byte**: Tương đương với `uint8`. Dùng để biểu thị một giá trị số không âm trong phạm vi 0-255.
+- **Rune**: Tương đương với `int32`. Dùng để biểu thị một ký tự trong bảng mã Unicode.
+- **uintptr**: Dùng để lưu trữ địa chỉ bộ nhớ.
 
-- Hạn chế sử dụng append với subslice (slice được tạo từ slice khác) hoặc đảm bảo append không gây ra việc overwrite bằng cách sử dụng full slice expression
+### Khai báo biến trong Golang
 
-y := x[:2:2]
-z := x[2:4:4]
+Khi khai báo biến, bạn cần phải lưu ý những điểm sau:
 
-- Việc khai báo này giúp giới hạn capacity của subslice bằng length
+- **Tránh sử dụng `:=` khi khai báo biến với giá trị mặc định (zero value)**: Khi khai báo biến với giá trị mặc định, hãy sử dụng từ khóa `var` thay vì `:=`.
 
-- Hoặc có thể dùng copy(dest, src). Với hàm này thì không cần quan tâm capacity mà length quan trọng hơn
+  ```go
+  var x int  // x sẽ có giá trị mặc định là 0
+  ```
+
+- **Khi gán giá trị cho một hằng số (constant) hoặc một literal với kiểu dữ liệu chưa xác định**, bạn nên sử dụng cú pháp khai báo rõ ràng với từ khóa `var`. Ví dụ:
+
+  ```go
+  var x byte = 20
+  ```
+
+- **Tránh khai báo biến trong phạm vi toàn cục (global scope)** vì nó có thể làm cho chương trình phức tạp và khó kiểm soát. Chỉ nên khai báo các biến trong phạm vi local (trong các function).
+
+- **Các biến local cần được sử dụng (read)**, tránh khai báo các biến không cần thiết, bởi chúng có thể gây rối cho việc phân tích mã sau này.
+
+- **Hằng số (`const`) có thể khai báo mà không cần phải đọc chúng**, bởi vì giá trị của chúng đã được tính toán trong quá trình biên dịch (compile time). Nếu hằng số không được sử dụng trong chương trình, nó sẽ không ảnh hưởng đến quá trình biên dịch và không được đưa vào file thực thi cuối cùng.
+
+**Tóm lại**:
+
+- Hãy khai báo biến với `var` khi bạn muốn có kiểu dữ liệu rõ ràng, đặc biệt khi bạn làm việc với giá trị mặc định.
+- Tránh sử dụng `:=` nếu bạn muốn khai báo một hằng số hoặc một giá trị với kiểu dữ liệu không xác định.
+- Hãy đảm bảo rằng mọi biến được khai báo đều được sử dụng trong mã của bạn để tránh việc khai báo thừa.
+
+---
+
+## Mảng và Slice trong Go
+
+### Mảng (Array) trong Go
+
+Mảng là kiểu dữ liệu khá đặc biệt trong Go, và ít khi được sử dụng trực tiếp vì những lý do sau:
+
+- **Kích thước mảng là một phần của kiểu dữ liệu**: Trong Go, mảng không chỉ được xác định bởi kiểu dữ liệu mà còn bởi kích thước (size) của mảng. Ví dụ, một mảng có kích thước 3 (`[3]int`) là khác so với một mảng có kích thước 4 (`[4]int`). Điều này có thể gây khó khăn khi làm việc với các mảng có kích thước không cố định.
+- **Không thể sử dụng biến làm kích thước mảng**: Go yêu cầu kích thước mảng phải được xác định tại thời điểm biên dịch (compile time), chứ không phải runtime. Do đó, bạn không thể sử dụng biến làm kích thước cho mảng trong Go.
+
+- **Không thể ép kiểu mảng**: Một mảng trong Go không thể được ép kiểu thành một mảng có kiểu khác, và bạn không thể viết một hàm xử lý mảng có kích thước bất kỳ. Bạn cũng không thể gán một mảng có kích thước khác cho mảng khác.
+
+- **Chỉ hỗ trợ mảng 1 chiều**: Go chỉ hỗ trợ mảng một chiều, nhưng bạn có thể tạo mảng nhiều chiều. Ví dụ: `var x [2][3]int`.
+
+> **Tóm lại về mảng**:
+
+- Mảng thích hợp khi bạn biết trước kích thước (length) của mảng và kích thước này không thay đổi.
+- Mảng tồn tại chủ yếu để hỗ trợ cho kiểu dữ liệu `slice`.
+
+### Slices trong Go
+
+Slices là một trong những kiểu dữ liệu mạnh mẽ và linh hoạt nhất trong Go. So với mảng, slices có nhiều ưu điểm, và là lựa chọn phổ biến trong Go khi làm việc với dữ liệu tuần tự.
+
+#### Khai báo Slice
+
+- **Slice literal**: Bạn có thể khai báo slice bằng cách sử dụng cú pháp slice literal. Ví dụ: `var x = []int{10, 20, 30}`.
+- **Nil zero value**: Giá trị mặc định (zero value) của slice là `nil`. Bạn có thể khai báo một slice rỗng như sau: `var x []int`.
+- **`make` function**: Hàm `make` được sử dụng để tạo một slice với độ dài và capacity được chỉ định. Ví dụ: `x := make([]int, 5, 10)` tạo ra một slice có độ dài 5 và capacity 10.
+
+#### Đặc điểm của Slice
+
+- **Không có kích thước cố định**: Slice trong Go không cần chỉ định kích thước (length) khi khai báo. Điều này làm cho slice trở thành lựa chọn tốt hơn khi bạn không biết trước số lượng phần tử.
+- **Dễ dàng thay đổi kích thước**: Một điểm mạnh của slice là khi bạn append thêm phần tử vào slice, Go sẽ tự động điều chỉnh kích thước của slice nếu cần. Tuy nhiên, điều này cũng có thể dẫn đến panic nếu bạn cố gắng thêm phần tử vào một slice có capacity nhỏ hơn length.
+
+- **Không thể so sánh slices**: Bạn không thể so sánh hai slice trực tiếp trong Go (trừ khi so sánh với `nil`). Tuy nhiên, bạn có thể sử dụng hàm `DeepEqual` từ package `reflect` để so sánh nội dung của hai slice.
+
+- **Chia sẻ vùng nhớ**: Nếu bạn tạo một slice mới từ một slice khác (subslice), hai slice này sẽ chia sẻ cùng một vùng nhớ. Điều này có nghĩa là nếu bạn thay đổi giá trị trong một slice, các slice khác có thể bị ảnh hưởng.
+
+#### Capacity của Slice
+
+- **Capacity**: Mỗi slice có một capacity, tức là dung lượng bộ nhớ tối đa mà slice có thể chứa. Capacity có thể lớn hơn length. Khi bạn thêm phần tử vào slice và length vượt quá capacity, Go sẽ tự động cấp phát một slice mới với capacity lớn hơn và sao chép dữ liệu từ slice cũ vào slice mới.
+
+- **Tăng capacity tự động**: Từ Go 1.14, nếu capacity của slice nhỏ hơn 1024, Go sẽ tự động gấp đôi capacity của slice mỗi khi cần thêm phần tử. Sau đó, tăng dần 25% khi cần thiết.
+
+- **Giảm thiểu số lần tăng capacity**: Để giảm thiểu thời gian cần thiết khi Go phải cấp phát và sao chép dữ liệu, bạn có thể khai báo slice với một capacity lớn hơn nếu bạn dự đoán số lượng phần tử trong tương lai.
+
+- **Slice từ một slice khác**: Khi bạn tạo một slice từ một slice khác, hai slice này sẽ chia sẻ cùng một vùng nhớ. Ví dụ:
+
+  ```go
+  x := []int{1, 2, 3, 4}
+  y := x[1:3]  // y = [2, 3]
+  ```
+
+- **`copy` function**: Nếu bạn muốn sao chép dữ liệu từ một slice này sang một slice khác mà không thay đổi vùng nhớ của chúng, bạn có thể sử dụng hàm `copy`. Ví dụ:
+
+  ```go
   x := []int{1, 2, 3, 4}
   y := make([]int, 4)
-  num := copy(y, x)
+  copy(y, x)
+  ```
+
+#### Các lưu ý khi làm việc với Slice
+
+- **Tránh việc sử dụng `append` với subslice**: Khi bạn append vào một subslice (slice được tạo từ slice khác), có thể xảy ra tình huống bạn vô tình ghi đè (overwrite) dữ liệu. Để tránh điều này, bạn có thể sử dụng full slice expression hoặc `copy` thay vì `append`.
+
+- **Sử dụng full slice expression**: Full slice expression cho phép bạn chỉ định rõ ràng phần length và capacity của slice khi tạo một subslice. Ví dụ:
+
+  ```go
+  y := x[:2:2]
+  z := x[2:4:4]
+  ```
+
+  Điều này giúp giới hạn capacity của subslice bằng length.
+
+### Tóm lại
+
+- Sử dụng **mảng** khi bạn biết chính xác số lượng phần tử và kích thước của mảng không thay đổi.
+- Sử dụng **slice** khi bạn cần làm việc với một danh sách có thể thay đổi kích thước hoặc không biết chính xác số lượng phần tử.
+- Đảm bảo khai báo slice với capacity hợp lý để tránh việc phải cấp phát lại bộ nhớ quá nhiều lần.
+
+---
 
 ## Strings và Runes và Bytes
 
@@ -239,3 +354,7 @@ func main() {
 - Program thường có các tài nguyên tạm, ví dụ như file hoặc kết nối mạng cần được dọn dẹp. Trong Go, việc cleanup này được attach tới function với keyword `defer`
 - Defer chạy theo thứ tự last-in-first-out
 - Code trong defer closure chạy sau lệnh `return`. Các biến truyền vào 1 defer closure sẽ không được evaluate cho tới khi closure chạy
+
+```
+
+```
