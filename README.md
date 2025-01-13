@@ -99,3 +99,5 @@ Go là ngôn ngữ static type. Nghĩa là khi biên dịch thì Go cần biết
     f1 := Adder.AddTo
     fmt.Println(f2(myAdder, 15)) // prints 25
     ```
+
+### Functions Versus Methods
