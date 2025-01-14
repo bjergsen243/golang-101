@@ -39,3 +39,8 @@
 - Khi sử dụng channel như tham số hàm, có thể chỉ định nếu 1 channel chỉ nhận hoặc gửi giá trị
 - Việc chỉ định này tăng sự an toàn về kiểu dữ liệu cho chương trình
 - Ví dụ:
+
+## Select
+
+- Select trong Go cho ta chờ nhiều toán tử channel
+- Kết hợp goroutine và channel với `select` là tính năng mạnh mẽ trong Go -> mạnh mẽ như thé nào nhỉ

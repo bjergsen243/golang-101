@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 	"time"
 )
 
@@ -25,4 +26,20 @@ func main() {
 	fmt.Println("waiting goroutines finish") // try WaitGroup
 	time.Sleep(time.Second)
 	fmt.Println("done")
+
+	go func() {
+		for i := 1; i <= 50; i++ {
+			fmt.Println("I am Goroutine 1")
+			runtime.Gosched()
+		}
+	}()
+
+	go func() {
+		for i := 1; i <= 50; i++ {
+			fmt.Println("I am Goroutine 2")
+			runtime.Gosched()
+		}
+	}()
+
+	time.Sleep(time.Second)
 }
