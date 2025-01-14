@@ -27,3 +27,9 @@
   ```go
   messages := make(chan string, 2) // channel này được buffer để nhận tới 2 giá trị
   ```
+
+## Channel Synchronization
+
+- Ta sử dụng channel để đồng bộ thực thi trên toàn goroutines.
+- Đây là ví dụ sử dụng blocking receive để chờ 1 goroutine hoàn thành
+- Khi chờ nhiều goroutine hoàn thành, nên sử dụng WaitGroup
