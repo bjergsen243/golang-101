@@ -33,3 +33,9 @@
 - Ta sử dụng channel để đồng bộ thực thi trên toàn goroutines.
 - Đây là ví dụ sử dụng blocking receive để chờ 1 goroutine hoàn thành
 - Khi chờ nhiều goroutine hoàn thành, nên sử dụng WaitGroup
+
+## Channel Directions
+
+- Khi sử dụng channel như tham số hàm, có thể chỉ định nếu 1 channel chỉ nhận hoặc gửi giá trị
+- Việc chỉ định này tăng sự an toàn về kiểu dữ liệu cho chương trình
+- Ví dụ:
