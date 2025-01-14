@@ -1,5 +1,7 @@
 # Channels
 
+## Default Channel
+
 - Channels là pipe để kết nối đồng thời (concurrent) goroutines
 - Có thể gửi giá trị vào channel từ 1 goroutine này và nhận giá trị đó tại 1 goroutine khác
 - Tạo mới 1 channel bằng keyword `chan` và `make`. Ví dụ: `messages := make(chan string)`
@@ -16,3 +18,12 @@
   ```
 
 - Theo mặc định gửi và nhận chặn cho tới khi sender và receiver sẵn sàng. Nó cho phép chúng ta chờ cho tới cuối chương trình để nhận giá trị mà tránh việc có bất kỳ sự đồng bộ (synchronization) nào khác
+
+## Buffered Channels
+
+- Theo mặc định thì channels đều unbuffered, nghĩa là chúng sẽ chỉ nhận gửi (chan <-) nếu có 1 nhận tương ứng (<- chan) sẵn sàng để nhận giá trị được gửi. Buffered channels chấp nhận 1 số lượng giá trị được giới hạn mà không cần receiver tương ứng
+- Ví dụ:
+
+  ```go
+  messages := make(chan string, 2) // channel này được buffer để nhận tới 2 giá trị
+  ```
