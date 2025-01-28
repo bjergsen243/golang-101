@@ -1,7 +1,7 @@
 # Golang 101
 
 - Go(lang) toàn tập (chắc vậy).
-- Cập nhật lần cuối: 24/01/2025 - Go 1.23.4
+- Cập nhật lần cuối: 28/01/2025 - Go 1.23.4
 
 ## Tài liệu hữu ích
 
@@ -13,6 +13,8 @@
   - [Effective Go](https://go.dev/doc/effective_go)
   - [Learn Go With Tests](https://quii.gitbook.io/learn-go-with-tests)
   - [200Lab Blog: Golang](https://200lab.io/blog/tag/golang/)
+  - [Go Practical Tips](https://github.com/func25/go-practical-tips/blob/main/tips.md)
+  - [Phuong Le's Blog](https://blog.devtrovert.com/archive?sort=top)
 
 ---
 
