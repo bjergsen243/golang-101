@@ -20,6 +20,7 @@
 
 ## Nội dung
 
+| | |
 | Tiêu đề | Nội dung chính |
 | [Giới thiệu](./notes/Introduction.md) | Giới thiệu chút về Go |
 | [Cài đặt Go](./notes/Setting_Up_Environment.md) | Cài đặt Go và một số lệnh hữu ích |
