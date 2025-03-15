@@ -3,7 +3,7 @@
 - Go(lang) toàn tập (chắc vậy).
 - Cập nhật lần cuối: 28/01/2025 - Go 1.23.4
 
-## Tài liệu hữu ích
+## Useful Resources
 
 - Một số tài liệu, sách mà bạn có thể tham khảo để hiểu rõ hơn Go:
   - [A Tour of Go](https://go.dev/tour/list)
@@ -18,10 +18,13 @@
 
 ---
 
-## Nội dung
+## Contents
 
-| | |
-| Tiêu đề | Nội dung chính |
-| [Giới thiệu](./notes/Introduction.md) | Giới thiệu chút về Go |
-| [Cài đặt Go](./notes/Setting_Up_Environment.md) | Cài đặt Go và một số lệnh hữu ích |
-| [Kiểu dữ liệu nguyên thuỷ và Khai báo](./notes/Primitive_Types_and_Declarations.md) | Các kiểu dữ liệu nguyên thuỷ trong Go và cách khai báo chúng |
+
+
+## TODO
+
+Implement these in Go:
+
+- Data Structures and Algorithms
+- Design Patterns
