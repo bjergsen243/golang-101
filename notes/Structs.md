@@ -5,3 +5,5 @@
 - Go không có class để kế thừa nhưng không có nghĩa Go không có OOP, chỉ là nó hơi khác đi thôi
 
 - Có thể so sánh các thành phần trong struct tuỳ vào type của nó
+
+- Chỉ dùng Anonymous Structs nếu chỉ cần dùng nó 1 lần
