@@ -21,3 +21,5 @@ Interfaces don't have constructors or deconstructors that require that data is c
 Interfaces aren't hierarchical by nature, though there is syntactic sugar to create interfaces that happen to be supersets of other interfaces.
 
 Interfaces define function signatures, but not underlying behavior. Making an interface often won't DRY up your code in regards to struct methods. For example, if five types satisfy the fmt.Stringer interface, they all need their own version of the String() function.
+
+`any` is an alias for `interface{}`
